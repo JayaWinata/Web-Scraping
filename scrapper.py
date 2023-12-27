@@ -1,11 +1,13 @@
-import pandas as pd
-import requests
-from bs4 import BeautifulSoup
+import time
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 url = 'https://rb.gy/ab50wv'
-page = requests.get(url, timeout=10)
-soup = BeautifulSoup(page.content, 'html.parser')
+options = webdriver.ChromeOptions()
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+driver.set_window_size(1366,768)
+driver.get(url)
 
-table_soup = soup.find('table')
-
-print(table_soup)
+time.sleep(10)
+driver.quit()
