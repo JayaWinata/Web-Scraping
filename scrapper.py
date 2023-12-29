@@ -1,4 +1,3 @@
-import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
@@ -6,6 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+import pandas as pd
 
 url = 'https://rb.gy/ab50wv'
 options = webdriver.ChromeOptions()
@@ -44,4 +44,17 @@ def clean_header(header: list[str]):
     return new_header
 
 header = clean_header(header)
+
+df = pd.DataFrame(columns=header)
+
+tr = tr[1:]
+print(tr)
+
+for data in tr:
+    td = data.find_all('td')
+    td_text = [td_text.text.strip() for td_text in td]
+    df.loc[len(df)] = td_text[2:len(td_text)-3]
+
+df['Peringkat'] = df.index + 1
+df['Poin'] = (df['Menang'] * 3) + (df['Seri'])
 
