@@ -19,10 +19,29 @@ try:
     element = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[aria-label='Bagian Klasemen']"))
     )
-    source_code = driver.find_element(By.TAG_NAME, 'table').get_attribute('innerHTML')
+    source_code = driver.find_element(By.CLASS_NAME, 'Jzru1c').get_attribute('innerHTML')
 finally:
     driver.quit()
 
 soup = BeautifulSoup(source_code,'html.parser')
+tr = soup.find_all('tr')
 
-print(soup.encode())
+header = tr[0].find_all('th')
+header = [data.text.strip() for data in header]
+header = header[2:len(header)-2]
+print(header)
+
+def clean_header(header: list[str]):
+    new_header = []
+    for data in header:
+        if (data[1].islower()):
+                new_data = data
+        else:
+            while (data[1].isupper()):
+                data = data[1:]
+            new_data = data        
+        new_header.append(new_data)
+    return new_header
+
+header = clean_header(header)
+
